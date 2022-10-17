@@ -21,6 +21,7 @@ public class Pedido {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
 	
 	@ManyToOne
@@ -82,9 +83,10 @@ public class Pedido {
 
 	@Override
 	public String toString() {
-		return "Pedido [id=" + id + ", cliente=" + cliente + ", dataPedido=" + dataPedido + ", total=" + total
-				+ ", itens=" + itens + "]";
+		return "Pedido [id=" + id + ", cliente=" + cliente + ", dataPedido=" + dataPedido + ", total=" + total + "]";
 	}
+
+	
 	
 	
 

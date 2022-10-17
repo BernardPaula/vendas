@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -23,6 +25,10 @@ public class Cliente {
 	@Column(name = "nome", length = 100)
 	private String nome;
 	
+	@Column(name = "cpf", length = 11)
+	private String cpf;
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)  // LAZY - Quando eu buscar o Cliente ele não trará seus pedidos (lista) juntos -- O que é o contrário do EAGER
 	private Set<Pedido> pedidos;
 	
@@ -34,11 +40,27 @@ public class Cliente {
 		this.nome = nome;
 	}
 	
+	public Cliente(Integer id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
+	
 	public Cliente( String nome, Integer id) {
 		this.id = id;
 		this.nome = nome;
 	}
 
+
+	
+	
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
 
 	public Set<Pedido> getPedidos() {
 		return pedidos;
@@ -61,11 +83,7 @@ public class Cliente {
 		this.nome = nome;
 	}
 
-	public Cliente(Integer id, String nome) {
-		super();
-		this.id = id;
-		this.nome = nome;
-	}
+	
 
 	@Override
 	public String toString() {

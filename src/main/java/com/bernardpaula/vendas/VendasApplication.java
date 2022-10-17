@@ -1,8 +1,5 @@
 package com.bernardpaula.vendas;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,14 +7,29 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.bernardpaula.vendas.domain.entity.Cliente;
-import com.bernardpaula.vendas.domain.entity.Pedido;
 import com.bernardpaula.vendas.domain.repository.ClienteRepository;
-import com.bernardpaula.vendas.domain.repository.PedidosRepository;
-
 
 @SpringBootApplication
 public class VendasApplication {
 
+	public static void main(String[] args) {
+		SpringApplication.run(VendasApplication.class, args);  //Comando para inicializar a aplicação Spring Boot
+	}
+
+	/*
+	@Bean
+	public CommandLineRunner commandLineRunner(@Autowired ClienteRepository repo ) {
+		
+		return args ->{
+			Cliente cliente = new Cliente(null, "Fulano");
+			repo.save(cliente);
+		};
+		
+	}
+	*/
+	
+	/*
+	
 	@Bean
 	public CommandLineRunner init (
 			@Autowired ClienteRepository clientes,
@@ -36,20 +48,22 @@ public class VendasApplication {
 			
 			pedidos.save(p);
 			
-			Cliente cliente = clientes.findClienteFatchPedidos(cliente2.getId());
+			//Cliente cliente = clientes.findClienteFatchPedidos(cliente2.getId());
 			//System.out.println(cliente);
 			//System.out.println(cliente.getPedidos());
 	
-			/*
+			pedidos.findByCliente(cliente2).forEach(System.out::println);
+			
+			
 			List<Cliente> result = clientes.encontrarPorNome("Bernard");
 			result.forEach(System.out::println);
-			*/
+		
 			
 			// boolean existe = clientes.existsByNome("Bernard");
 			// System.out.println("Existe um registro com o nome Bernard? " + existe);
 			
 			
-			/*
+			
 			 
 			List<Cliente> todosClientes = clientes.findAll();
 			todosClientes.forEach(System.out::println);
@@ -78,13 +92,12 @@ public class VendasApplication {
 				todosClientes.forEach(System.out::println);
 			}
 			
-			*/
+			
 		};
 	}
 			
+			*/
 	
-	public static void main(String[] args) {
-		SpringApplication.run(VendasApplication.class, args);  //Comando para inicializar a aplicação Spring Boot
-	}
+	
 	
 }

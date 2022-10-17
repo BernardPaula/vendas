@@ -19,9 +19,11 @@ public interface ClienteRepository extends JpaRepository<Cliente,Integer>{
 	// select c from Cliente c where c.nome like :nome
 	List<Cliente> findByNomeLike(String nome);
 	
+	
 	@Query("delete from Cliente c where c.nome =:nome")
 	@Modifying
 	void deleteByNome(String nome);
+	
 	
 	@Query("select c from Cliente c left join fetch c.pedidos where c.id = :id ")
 	Cliente findClienteFatchPedidos(@Param("id") Integer id);
@@ -36,6 +38,7 @@ public interface ClienteRepository extends JpaRepository<Cliente,Integer>{
 	Cliente findOneByNome(String nome);
 	
 	boolean existsByNome(String nome);
+	
 	
 	/*
 	@Autowired
