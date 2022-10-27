@@ -38,6 +38,11 @@ public interface ClienteRepository extends JpaRepository<Cliente,Integer>{
 	Cliente findOneByNome(String nome);
 	
 	boolean existsByNome(String nome);
+
+	
+	
+	
+	//-----
 	
 	
 	/*

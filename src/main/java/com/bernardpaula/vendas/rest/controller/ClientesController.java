@@ -3,6 +3,8 @@ package com.bernardpaula.vendas.rest.controller;
  
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ import com.bernardpaula.vendas.domain.entity.Cliente;
 import com.bernardpaula.vendas.domain.repository.ClienteRepository;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/clientes")
 public class ClientesController {
 
 	private ClienteRepository clienteRepo;
@@ -30,10 +32,8 @@ public class ClientesController {
 		this.clienteRepo = clienteRepo;
 	}
 	
-	
-	
 
-	@GetMapping("/cliente/{id}")   // é equivalente ao metodo requestMapping com o metodo GET
+	@GetMapping("{id}")   // é equivalente ao metodo requestMapping com o metodo GET
 	public Cliente GetClienteById(@PathVariable Integer id) {	
 		return clienteRepo.findById(id)
 					  	 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));	
@@ -42,28 +42,26 @@ public class ClientesController {
 	
 	@PostMapping("/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente save(@RequestBody Cliente cliente){
+	public Cliente save(@RequestBody @Valid Cliente cliente){
 		return  clienteRepo.save(cliente);
 	}
 	
 	
-	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deletar/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Integer id) {
 		 clienteRepo.findById(id)
-								.map(  cliente -> { clienteRepo.delete(cliente);  return cliente; }   )
+								.map(  cliente -> { clienteRepo.deleteById(id);  return cliente; }   )
 								.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 	}
-	
+		
 
-								
 	
 	@PutMapping("/atualizar/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update(
 							@PathVariable Integer id,
-							@RequestBody Cliente cliente) {
+							@RequestBody @Valid Cliente cliente) {
 		clienteRepo
 				.findById(id)       // o findById retorna um Optional, que possui o método map()
 				.map( clienteExistente -> {     // O metodo map sempre tem que retornar um objeto
@@ -73,9 +71,9 @@ public class ClientesController {
 				}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado")); //orElseGet é um metodo que recebe como parâmetro um supplier(é uma interface funcional que recebe um parametro e retorna qualquer coisa)
 	}
 	
+
 	
-	
-	@GetMapping("/clientes")
+	@GetMapping("/filtrar")
 	public List<Cliente> find (Cliente filtro) {   
 		ExampleMatcher matcher = ExampleMatcher      	// Busca por Query Params ->Cabeçalho da requisição
 									.matching()
@@ -94,7 +92,7 @@ public class ClientesController {
 		}
 		*/
 	}
-	
+
 	
 	
 	/*

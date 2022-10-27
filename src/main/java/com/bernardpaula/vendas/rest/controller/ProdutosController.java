@@ -1,8 +1,12 @@
 package com.bernardpaula.vendas.rest.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -24,42 +28,51 @@ import com.bernardpaula.vendas.domain.repository.ProdutosRepository;
 @RequestMapping("/api/produtos")
 public class ProdutosController {
 
-	@Autowired
 	public ProdutosRepository repo;
 	
+	public ProdutosController(ProdutosRepository repo) {
+		this.repo = repo;
+	}
 	
-	@GetMapping("/{id}")
+	
+	@GetMapping("{id}")
 	public Produto find(@PathVariable Integer id) {
 		return repo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
 	}
 	
 	
 	@PostMapping("/inserir")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void insert(@RequestBody Produto obj) {
+	@ResponseStatus(CREATED)
+	public void insert(@RequestBody @Valid Produto obj) {
 		repo.save(obj);
 	}
 	
 	
 	@DeleteMapping("/deletar/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable Integer id) {									// supplier
-		repo.findById(id).map( obj -> { repo.delete(obj); return obj; })
+		repo.findById(id).map( obj -> { repo.delete(obj); return Void.TYPE; })
 											.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
 	}
 	
+
+	
+	
 	@PutMapping("/atualizar/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@PathVariable Integer id, @RequestBody Produto produto) {
+	@ResponseStatus(NO_CONTENT)
+	public void atualizar(@PathVariable Integer id, @RequestBody @Valid Produto produto) {
 		repo.findById(id).map(obj -> { produto.setId(obj.getId());
 										repo.save(produto);
 										return obj;
 										}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
 	}
 	
+	
+	
 	@GetMapping("/filtrar")
 	public List<Produto> filtrar(Produto filtro){
-		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+		ExampleMatcher matcher = ExampleMatcher.matching()
+				.withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 		Example example = Example.of(filtro, matcher);
 		List<Produto> list = repo.findAll(example);
 		return list;
